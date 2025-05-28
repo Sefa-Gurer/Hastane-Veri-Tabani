@@ -1,0 +1,34 @@
+CREATE OR REPLACE PROCEDURE Hasta_Ekle (
+    p_tc        IN NUMBER,
+    p_ad        IN VARCHAR2,
+    p_soyad     IN VARCHAR2,
+    p_email     IN VARCHAR2,
+    p_tel       IN NUMBER,
+    p_dogum     IN DATE,
+    p_kan_grubu IN VARCHAR2
+)
+IS
+BEGIN
+    INSERT INTO Hastalar (
+        Hasta_tc, Hasta_Ad, Hasta_Soyad, Hasta_Email, Hasta_Tel, Hasta_Dogum_Tarihi, Kan_Grubu
+    ) VALUES (
+        p_tc, p_ad, p_soyad, p_email, p_tel, p_dogum, p_kan_grubu
+    );
+
+    DBMS_OUTPUT.PUT_LINE('Hasta başarıyla eklendi.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('HATA: ' || SQLERRM);
+END;
+/
+
+
+
+
+
+
+Örnek kullanım:
+BEGIN
+    Hasta_Ekle(22222222222, 'Ayşe', 'Demir', 'ayse@example.com', 5556677889, TO_DATE('1988-03-14','YYYY-MM-DD'), 'B+');
+END;
+/

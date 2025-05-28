@@ -1,0 +1,8 @@
+CREATE OR REPLACE TRIGGER TRG_GirisLog
+AFTER INSERT ON Sisteme_Giris_Bilgileri
+FOR EACH ROW
+BEGIN
+    INSERT INTO Sisteme_Giris_Zamani (Personel, Giris_Zamani)
+    VALUES (:NEW.Personel, SYSDATE);
+END;
+/

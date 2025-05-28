@@ -1,0 +1,1 @@
+CREATE INDEX IDX_TahlilTarih ON Tahliller(Tarih);

@@ -1,0 +1,178 @@
+CREATE TABLE Hastalar (
+    Hasta_tc NUMBER(11) PRIMARY KEY,
+    Hasta_Ad VARCHAR2(50) NOT NULL,
+    Hasta_Soyad VARCHAR2(50) NOT NULL,
+    Hasta_Email VARCHAR2(225),
+    Hasta_Tel NUMBER(10) NOT NULL,
+    Hasta_Dogum_Tarihi DATE,
+    Kan_Grubu VARCHAR2(5) NOT NULL,
+    
+    CONSTRAINT chk_tc CHECK (Hasta_tc BETWEEN 10000000000 AND 99999999999),
+    CONSTRAINT chk_tel CHECK (Hasta_Tel BETWEEN 5000000000 AND 6000000000),
+    CONSTRAINT chk_kan_grubu CHECK (Kan_Grubu IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', '0+', '0-'))
+);
+CREATE TABLE Tahlil_Aralikleri (
+    Sonuc_Tipi VARCHAR2(50) PRIMARY KEY,
+    Sonuc_Max NUMBER NOT NULL,
+    Sonuc_Min NUMBER NOT NULL
+);
+CREATE TABLE Tahliller (
+    tc NUMBER(11) NOT NULL,
+    Sonuc_Tipi VARCHAR2(50) NOT NULL,
+    Sonuc NUMBER,
+    Tarih DATE NOT NULL,
+
+    CONSTRAINT fk_tc FOREIGN KEY (tc) REFERENCES Hastalar(Hasta_tc),
+    CONSTRAINT fk_sonuc_tipi FOREIGN KEY (Sonuc_Tipi) REFERENCES Tahlil_Aralikleri(Sonuc_Tipi)
+);
+CREATE TABLE Tahliller (
+    tc NUMBER(11) NOT NULL,
+    Sonuc_Tipi VARCHAR2(50) NOT NULL,
+    Sonuc NUMBER,
+    Tarih DATE NOT NULL,
+
+    CONSTRAINT fk_tc FOREIGN KEY (tc) REFERENCES Hastalar(Hasta_tc),
+    CONSTRAINT fk_sonuc_tipi FOREIGN KEY (Sonuc_Tipi) REFERENCES Tahlil_Aralikleri(Sonuc_Tipi)
+);
+CREATE TABLE Radyolojik_Goruntuler (
+    tc NUMBER(11) NOT NULL,
+    Sonuc_Tipi VARCHAR2(50) NOT NULL,
+    Sonuc BLOB,
+    Tarih DATE NOT NULL,
+
+    CONSTRAINT fk_tc2 FOREIGN KEY (tc) REFERENCES Hastalar(Hasta_tc),
+    CONSTRAINT chk_sonuc_tipi_radyo CHECK (
+        Sonuc_Tipi IN ('MR', 'RÖNTGEN')
+    )
+);
+CREATE TABLE Poliklinikler (
+    PoliklinikID NUMBER PRIMARY KEY,
+    Poliklinik_adi VARCHAR2(50) NOT NULL
+);
+CREATE TABLE Unvanlar (
+    UnvanID NUMBER PRIMARY KEY,
+    Unvan_adi VARCHAR2(50) NOT NULL
+);
+CREATE TABLE Personeller (
+    PersonelID NUMBER PRIMARY KEY,
+    Personel_tc NUMBER(11) UNIQUE NOT NULL,
+    Personel_Ad VARCHAR2(50) NOT NULL,
+    Personel_Soyad VARCHAR2(50) NOT NULL,
+    Personel_Email VARCHAR2(225),
+    Personel_Tel NUMBER(10) NOT NULL,
+    Unvan NUMBER NOT NULL,
+    Poliklinik NUMBER NOT NULL,
+
+    CONSTRAINT chk_personel_tc CHECK (Personel_tc BETWEEN 10000000000 AND 99999999999),
+    CONSTRAINT chk_personel_tel CHECK (Personel_Tel BETWEEN 5000000000 AND 6000000000),
+    CONSTRAINT fk_Unvan FOREIGN KEY (Unvan) REFERENCES Unvanlar(UnvanID),
+    CONSTRAINT fk_Poliklinik FOREIGN KEY (Poliklinik) REFERENCES Poliklinikler(PoliklinikID)
+);
+CREATE TABLE Sisteme_Giris_Bilgileri (
+    Personel NUMBER NOT NULL,
+    Sifre VARCHAR2(50) UNIQUE,
+    CONSTRAINT fk_Personel FOREIGN KEY (Personel) REFERENCES Personeller(PersonelID)
+);
+CREATE TABLE Sisteme_Giris_Zamani (
+    Personel NUMBER NOT NULL,
+    Giris_Zamani DATE,
+    CONSTRAINT fk_Giris FOREIGN KEY (Personel) REFERENCES Personeller(PersonelID)
+);
+CREATE TABLE Tahlil_Log (
+    LogID NUMBER PRIMARY KEY,
+    tc NUMBER(11),
+    Sonuc_Tipi VARCHAR2(50),
+    Sonuc NUMBER,
+    Tarih DATE,
+    Log_Tarihi DATE DEFAULT SYSDATE
+);
+CREATE TABLE Teshis_Turleri (
+    Teshis_Kodu VARCHAR2(20) PRIMARY KEY,
+    Teshis_Aciklamasi VARCHAR2(255) NOT NULL
+);
+CREATE TABLE Muayeneler (
+    MuayeneID NUMBER PRIMARY KEY,
+    Hasta_tc NUMBER(11) NOT NULL,
+    PersonelID NUMBER,
+    Muayene_Tarihi DATE DEFAULT SYSDATE,
+    Notlar VARCHAR2(500),
+
+    CONSTRAINT fk_muayene_hasta FOREIGN KEY (Hasta_tc) REFERENCES Hastalar(Hasta_tc),
+    CONSTRAINT fk_muayene_personel FOREIGN KEY (PersonelID) REFERENCES Personeller(PersonelID)
+);
+CREATE TABLE Tedavi_Yatarak (
+    MuayeneID NUMBER PRIMARY KEY,
+    Oda_No VARCHAR2(10) NOT NULL,
+    Yatis_Tarihi DATE NOT NULL,
+    Cikis_Tarihi DATE,
+    Tedavi_Suresi NUMBER, -- Gün cinsinden
+    Teshis_Kodu VARCHAR2(20),
+    Tedavi_Eden_DoktorID NUMBER NOT NULL,
+
+    CONSTRAINT fk_tedavi_yatarak_muayene FOREIGN KEY (MuayeneID) REFERENCES Muayeneler(MuayeneID),
+    CONSTRAINT fk_tedavi_doktor FOREIGN KEY (Tedavi_Eden_DoktorID) REFERENCES Personeller(PersonelID),
+    CONSTRAINT fk_teshis_kodu FOREIGN KEY (Teshis_Kodu) REFERENCES Teshis_Turleri(Teshis_Kodu)
+);
+CREATE TABLE Tedavi_Ayakta (
+    MuayeneID NUMBER PRIMARY KEY,
+    Uygulanan_Tedavi VARCHAR2(255),
+    Recete VARCHAR2(4000),
+    Teshis_Kodu VARCHAR2(20),
+
+    CONSTRAINT fk_tedavi_ayakta_muayene FOREIGN KEY (MuayeneID) REFERENCES Muayeneler(MuayeneID),
+    CONSTRAINT fk_teshis_kodu_ayakta FOREIGN KEY (Teshis_Kodu) REFERENCES Teshis_Turleri(Teshis_Kodu)
+);
+
+-------------------------------------------------------------------------------------------
+
+-- POLIKLINIKLER
+CREATE SEQUENCE SEQ_PoliklinikID START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER TRG_PoliklinikID
+BEFORE INSERT ON Poliklinikler
+FOR EACH ROW
+BEGIN
+    :NEW.PoliklinikID := SEQ_PoliklinikID.NEXTVAL;
+END;
+
+-- UNVANLAR
+CREATE SEQUENCE SEQ_UnvanID START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER TRG_UnvanID
+BEFORE INSERT ON Unvanlar
+FOR EACH ROW
+BEGIN
+    :NEW.UnvanID := SEQ_UnvanID.NEXTVAL;
+END;
+
+-- PERSONELLER
+CREATE SEQUENCE SEQ_PersonelID START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER TRG_PersonelID
+BEFORE INSERT ON Personeller
+FOR EACH ROW
+BEGIN
+    :NEW.PersonelID := SEQ_PersonelID.NEXTVAL;
+END;
+
+-- TAHLIL_LOG
+CREATE SEQUENCE SEQ_TahlilLog START WITH 1 INCREMENT BY 1 NOCACHE;
+
+CREATE OR REPLACE TRIGGER TRG_TahlilLog_ID
+BEFORE INSERT ON Tahlil_Log
+FOR EACH ROW
+BEGIN
+    IF :NEW.LogID IS NULL THEN
+        :NEW.LogID := SEQ_TahlilLog.NEXTVAL;
+    END IF;
+END;
+
+-- MUAYENELER
+CREATE SEQUENCE SEQ_MuayeneID START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER TRG_MuayeneID
+BEFORE INSERT ON Muayeneler
+FOR EACH ROW
+BEGIN
+    :NEW.MuayeneID := SEQ_MuayeneID.NEXTVAL;
+END;

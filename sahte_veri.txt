@@ -1,0 +1,128 @@
+-- TAHLIL_ARALIKLERİ TABLOSU
+INSERT INTO Tahlil_Aralikleri (Sonuc_Tipi, Sonuc_Max, Sonuc_Min) VALUES ('GLUKOZ', 110, 70);
+INSERT INTO Tahlil_Aralikleri (Sonuc_Tipi, Sonuc_Max, Sonuc_Min) VALUES ('KOLESTEROL', 200, 125);
+INSERT INTO Tahlil_Aralikleri (Sonuc_Tipi, Sonuc_Max, Sonuc_Min) VALUES ('TSH', 4.0, 0.4);
+INSERT INTO Tahlil_Aralikleri (Sonuc_Tipi, Sonuc_Max, Sonuc_Min) VALUES ('ÜRE', 45, 10);
+INSERT INTO Tahlil_Aralikleri (Sonuc_Tipi, Sonuc_Max, Sonuc_Min) VALUES ('DEMİR', 170, 60);
+INSERT INTO Tahlil_Aralikleri (Sonuc_Tipi, Sonuc_Max, Sonuc_Min) VALUES ('İNSÜLİN', 25, 2);
+
+
+
+
+-- POLIKLINIKLER TABLOSU
+INSERT INTO Poliklinikler (Poliklinik_adi) VALUES ('Kardiyoloji');
+INSERT INTO Poliklinikler (Poliklinik_adi) VALUES ('Nöroloji');
+INSERT INTO Poliklinikler (Poliklinik_adi) VALUES ('Dahiliye');
+
+
+
+
+-- UNVANLAR TABLOSU
+INSERT INTO Unvanlar (Unvan_adi) VALUES ('Doktor');
+INSERT INTO Unvanlar (Unvan_adi) VALUES ('Hemşire');
+INSERT INTO Unvanlar (Unvan_adi) VALUES ('Teknisyen');
+
+
+
+
+-- HASTALAR TABLOSU
+INSERT INTO Hastalar (Hasta_tc, Hasta_Ad, Hasta_Soyad, Hasta_Email, Hasta_Tel, Hasta_Dogum_Tarihi, Kan_Grubu)
+VALUES (10000000001, 'Ali', 'Yılmaz', 'ali.yilmaz@example.com', 5301112233, TO_DATE('1990-05-12','YYYY-MM-DD'), 'A+');
+INSERT INTO Hastalar (Hasta_tc, Hasta_Ad, Hasta_Soyad, Hasta_Email, Hasta_Tel, Hasta_Dogum_Tarihi, Kan_Grubu)
+VALUES (10000000002, 'Ayşe', 'Demir', 'ayse.demir@example.com', 5322223344, TO_DATE('1985-09-30','YYYY-MM-DD'), 'B+');
+
+
+
+
+-- PERSONELLER TABLOSU
+INSERT INTO Personeller (Personel_tc, Personel_Ad, Personel_Soyad, Personel_Email, Personel_Tel, Unvan, Poliklinik)
+VALUES (20000000001, 'Mehmet', 'Kaya', 'mehmet.kaya@example.com', 5343334455, 1, 1);
+INSERT INTO Personeller (Personel_tc, Personel_Ad, Personel_Soyad, Personel_Email, Personel_Tel, Unvan, Poliklinik)
+VALUES (20000000002, 'Fatma', 'Çelik', 'fatma.celik@example.com', 5354445566, 2, 2);
+
+
+
+
+-- SISTEME_GIRIS_BILGILERI TABLOSU
+INSERT INTO Sisteme_Giris_Bilgileri (Personel, Sifre) VALUES (1, 'sifre123');
+INSERT INTO Sisteme_Giris_Bilgileri (Personel, Sifre) VALUES (2, 'sifre456');
+
+
+
+
+-- SISTEME_GIRIS_ZAMANI TABLOSU
+INSERT INTO Sisteme_Giris_Zamani (Personel, Giris_Zamani) 
+VALUES (1, TO_DATE('2024-05-10 08:30:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Sisteme_Giris_Zamani (Personel, Giris_Zamani) 
+VALUES (2, TO_DATE('2024-05-10 09:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+
+
+
+-- TAHLILLER TABLOSU
+INSERT INTO Tahliller (tc, Sonuc_Tipi, Sonuc, Tarih)
+VALUES (10000000001, 'GLUKOZ', 95, TO_DATE('2024-04-01','YYYY-MM-DD'));
+INSERT INTO Tahliller (tc, Sonuc_Tipi, Sonuc, Tarih)
+VALUES (10000000002, 'TSH', 2.1, TO_DATE('2024-04-02','YYYY-MM-DD'));
+
+
+
+
+-- RADYOLOJIK_GORUNTULER TABLOSU
+INSERT INTO Radyolojik_Goruntuler (tc, Sonuc_Tipi, Sonuc, Tarih)
+VALUES (10000000001, 'MR', EMPTY_BLOB(), TO_DATE('2024-03-15','YYYY-MM-DD'));
+INSERT INTO Radyolojik_Goruntuler (tc, Sonuc_Tipi, Sonuc, Tarih)
+VALUES (10000000002, 'RÖNTGEN', EMPTY_BLOB(), TO_DATE('2024-03-16','YYYY-MM-DD'));
+
+
+
+
+-- TESHIS TURLERI
+INSERT INTO Teshis_Turleri VALUES ('I20.0', 'Stabil angina pektoris');
+INSERT INTO Teshis_Turleri VALUES ('R55', 'Senkop ve kollaps');
+INSERT INTO Teshis_Turleri VALUES ('Z03.89', 'Tıbbi gözlem altında değerlendirme');
+INSERT INTO Teshis_Turleri VALUES ('R51', 'Baş ağrısı');
+INSERT INTO Teshis_Turleri VALUES ('J00', 'Nazofarenjit (soğuk algınlığı)');
+INSERT INTO Teshis_Turleri VALUES ('I10', 'Esansiyel (primer) hipertansiyon');
+INSERT INTO Teshis_Turleri VALUES ('R42', 'Baş dönmesi ve sersemlik');
+INSERT INTO Teshis_Turleri VALUES ('Z00.0', 'Genel sağlık kontrolü');
+INSERT INTO Teshis_Turleri VALUES ('Z76.0', 'Yinelenen reçete için başvuru');
+
+
+
+
+-- MUAYENELER
+INSERT INTO Muayeneler (Hasta_tc, PersonelID, Muayene_Tarihi, Notlar)
+VALUES (10000000001, 1, TO_DATE('2024-03-30', 'YYYY-MM-DD'), 'Göğüs ağrısı şikayeti');
+INSERT INTO Muayeneler (Hasta_tc, PersonelID, Muayene_Tarihi, Notlar)
+VALUES (10000000002, 2, TO_DATE('2024-04-01', 'YYYY-MM-DD'), 'Baş dönmesi');
+INSERT INTO Muayeneler (Hasta_tc, PersonelID, Muayene_Tarihi, Notlar)
+VALUES (10000000002, 1, TO_DATE('2024-05-01', 'YYYY-MM-DD'), 'Düzenli kontrol');
+INSERT INTO Muayeneler (Hasta_tc, PersonelID, Muayene_Tarihi, Notlar)
+VALUES (10000000001, 2, TO_DATE('2024-05-02', 'YYYY-MM-DD'), 'İlaç raporu yenileme');
+INSERT INTO Muayeneler (Hasta_tc, PersonelID, Muayene_Tarihi, Notlar)
+VALUES (10000000001, 1, TO_DATE('2024-05-05', 'YYYY-MM-DD'), 'Bayılma sonrası yatış'); 
+INSERT INTO Muayeneler (Hasta_tc, PersonelID, Muayene_Tarihi, Notlar)
+VALUES (10000000002, 1, TO_DATE('2024-05-10', 'YYYY-MM-DD'), 'Gözlem amaçlı yatış');
+
+
+
+
+-- TEDAVİ YATARAK
+INSERT INTO Tedavi_Yatarak (MuayeneID, Oda_No, Yatis_Tarihi, Cikis_Tarihi, Teshis_Kodu, Tedavi_Eden_DoktorID)
+VALUES (1, '205A', TO_DATE('2024-03-30', 'YYYY-MM-DD'), TO_DATE('2024-04-04', 'YYYY-MM-DD'), 'I20.0', 1);
+INSERT INTO Tedavi_Yatarak (MuayeneID, Oda_No, Yatis_Tarihi, Cikis_Tarihi, Teshis_Kodu, Tedavi_Eden_DoktorID)
+VALUES (5, '301B', TO_DATE('2024-05-05', 'YYYY-MM-DD'), TO_DATE('2024-05-08', 'YYYY-MM-DD'), 'R55', 1); -- Bayılma
+INSERT INTO Tedavi_Yatarak (MuayeneID, Oda_No, Yatis_Tarihi, Cikis_Tarihi, Teshis_Kodu, Tedavi_Eden_DoktorID)
+VALUES (6, '102A', TO_DATE('2024-05-10', 'YYYY-MM-DD'), TO_DATE('2024-05-13', 'YYYY-MM-DD'), 'Z03.89', 1); -- Gözlem
+
+
+
+
+-- TEDAVİ AYAKTA
+INSERT INTO Tedavi_Ayakta (MuayeneID, Uygulanan_Tedavi, Recete, Teshis_Kodu)
+VALUES (2, 'Sıvı takviyesi ve tansiyon kontrolü önerildi', 'Betaserc 24mg, 2x1', 'R42');
+INSERT INTO Tedavi_Ayakta (MuayeneID, Uygulanan_Tedavi, Recete, Teshis_Kodu)
+VALUES (3, 'Kan tahlili ve tansiyon ölçümü yapıldı. Bulgular normal.', 'Multivitamin, 1x1', 'Z00.0');
+INSERT INTO Tedavi_Ayakta (MuayeneID, Uygulanan_Tedavi, Recete, Teshis_Kodu)
+VALUES (4, 'Reçetesi biten tansiyon ilacı yeniden yazıldı', 'Norvasc 5mg, 1x1', 'Z76.0');

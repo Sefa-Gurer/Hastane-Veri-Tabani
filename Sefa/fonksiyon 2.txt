@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION FN_Tahlil_Sayisi(tc_no IN NUMBER)
+RETURN NUMBER
+IS
+    sayi NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO sayi
+    FROM Tahliller
+    WHERE tc = tc_no;
+
+    RETURN sayi;
+END;
+/
+
+
+-- SORGU İÇİN
+-- SELECT FN_Tahlil_Sayisi(36976687086) FROM DUAL;

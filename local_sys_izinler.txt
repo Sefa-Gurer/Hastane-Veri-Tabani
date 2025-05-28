@@ -1,0 +1,26 @@
+CREATE TABLESPACE HastaneDB DATAFILE 'hastanedb.dbf' SIZE 10M AUTOEXTEND ON MAXSIZE UNLIMITED;
+
+
+create user HastaneDB
+identified by 121212
+default tablespace HastaneDB;
+
+
+-- Veri tabanina baglanma yetkisi
+GRANT "CONNECT" to HastaneDB;
+
+
+-- Tablo olusturma yetkisi
+GRANT CREATE TABLE TO HastaneDB;
+
+
+-- Tablespace i sinirsiz kullanma yetkisi
+GRANT UNLIMITED TABLESPACE TO HastaneDB;
+
+GRANT CREATE PROCEDURE TO HastaneDB;
+
+GRANT CREATE SEQUENCE TO HastaneDB;
+
+GRANT CREATE TRIGGER TO HastaneDB;
+
+GRANT CREATE VIEW TO HastaneDB;

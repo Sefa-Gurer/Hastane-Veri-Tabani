@@ -1,0 +1,10 @@
+CREATE OR REPLACE TRIGGER TRG_Tedavi_Suresi
+BEFORE INSERT OR UPDATE ON Tedavi_Yatarak
+FOR EACH ROW
+BEGIN
+    IF :NEW.Cikis_Tarihi IS NOT NULL THEN
+        :NEW.Tedavi_Suresi := :NEW.Cikis_Tarihi - :NEW.Yatis_Tarihi;
+    ELSE
+        :NEW.Tedavi_Suresi := NULL;
+    END IF;
+END;

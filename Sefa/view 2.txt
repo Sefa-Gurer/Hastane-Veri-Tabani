@@ -1,0 +1,14 @@
+CREATE OR REPLACE VIEW vw_Hasta_Tahlil_Ozeti AS
+SELECT 
+    h.Hasta_tc,
+    h.Hasta_Ad,
+    h.Hasta_Soyad,
+    t.Sonuc_Tipi,
+    t.Sonuc,
+    TO_CHAR(t.Tarih, 'DD.MM.YYYY') AS Tahlil_Tarihi
+FROM Hastalar h
+JOIN Tahliller t ON h.Hasta_tc = t.tc;
+
+
+-- SORGU İÇİN
+-- SELECT * FROM vw_Hasta_Tahlil_Ozeti WHERE Hasta_tc = 36976687068;

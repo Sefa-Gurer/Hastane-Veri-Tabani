@@ -1,0 +1,11 @@
+CREATE OR REPLACE TRIGGER TRG_HastaEmailKontrol
+BEFORE INSERT OR UPDATE ON Hastalar
+FOR EACH ROW
+BEGIN
+    IF :NEW.Hasta_Email IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Hasta Email boş bırakılamaz.');
+    ELSIF INSTR(:NEW.Hasta_Email, '@') = 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Geçersiz Email formatı. @ işareti içermelidir.');
+    END IF;
+END;
+/

@@ -1,0 +1,17 @@
+CREATE OR REPLACE VIEW vw_Personel_Gorunumu AS
+SELECT 
+    p.PersonelID,
+    p.Personel_tc,
+    p.Personel_Ad,
+    p.Personel_Soyad,
+    p.Personel_Email,
+    p.Personel_Tel,
+    u.Unvan_adi AS Unvan,
+    pk.Poliklinik_adi AS Poliklinik
+FROM Personeller p
+JOIN Unvanlar u ON p.Unvan = u.UnvanID
+JOIN Poliklinikler pk ON p.Poliklinik = pk.PoliklinikID;
+
+
+-- SORGU İÇİN
+-- SELECT * FROM vw_Personel_Gorunumu;

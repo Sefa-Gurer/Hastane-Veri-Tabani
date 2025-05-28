@@ -1,0 +1,23 @@
+CREATE OR REPLACE PROCEDURE Personel_Ekle (
+    p_tc         IN NUMBER,
+    p_ad         IN VARCHAR2,
+    p_soyad      IN VARCHAR2,
+    p_email      IN VARCHAR2,
+    p_tel        IN NUMBER,
+    p_unvan_id   IN NUMBER,
+    p_poliklinik IN NUMBER
+)
+IS
+BEGIN
+    INSERT INTO Personeller (
+        Personel_tc, Personel_Ad, Personel_Soyad, Personel_Email, Personel_Tel, Unvan, Poliklinik
+    ) VALUES (
+        p_tc, p_ad, p_soyad, p_email, p_tel, p_unvan_id, p_poliklinik
+    );
+
+    DBMS_OUTPUT.PUT_LINE('Personel başarıyla eklendi.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('HATA: ' || SQLERRM);
+END;
+/

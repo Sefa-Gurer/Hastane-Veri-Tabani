@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION FN_Personel_Sayisi_Poliklinik(p_id IN NUMBER)
+RETURN NUMBER
+IS
+    toplam NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO toplam
+    FROM Personeller
+    WHERE Poliklinik = p_id;
+
+    RETURN toplam;
+END;
+/
+
+
+-- SORGU İÇİN
+-- SELECT FN_Personel_Sayisi_Poliklinik(3) FROM DUAL;

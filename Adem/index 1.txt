@@ -1,0 +1,1 @@
+CREATE INDEX IDX_Tahliller_tc_Tarih ON Tahliller(tc, Tarih);
