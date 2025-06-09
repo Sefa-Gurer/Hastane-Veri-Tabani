@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Hastalar - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>
+                <i class="fas fa-users text-primary"></i> 
+                Hasta Listesi
+            </h1>
+            <a href="{{ url_for('add_patient') }}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Yeni Hasta Ekle
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list"></i> Kayıtlı Hastalar ({{ patients|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="patientsTable">
+                        <thead>
+                            <tr>
+                                <th>TC Kimlik</th>
+                                <th>Ad Soyad</th>
+                                <th>Telefon</th>
+                                <th>Doğum Tarihi</th>
+                                <th>Kan Grubu</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients %}
+                            <tr>
+                                <td>{{ patient.tc }}</td>
+                                <td>
+                                    <strong>{{ patient.ad }} {{ patient.soyad }}</strong>
+                                </td>
+                                <td>
+                                    <i class="fas fa-phone text-muted"></i>
+                                    {{ patient.tel }}
+                                </td>
+                                <td>{{ patient.dogum_tarihi }}</td>
+                                <td>
+                                    <span class="badge bg-info">{{ patient.kan_grubu }}</span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('patient_detail', tc=patient.tc) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> Detay
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Basit tablo arama özelliği
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.className = 'form-control mb-3';
+    searchInput.placeholder = 'Hasta ara...';
+    
+    const cardBody = document.querySelector('.card-body');
+    cardBody.insertBefore(searchInput, cardBody.firstChild);
+    
+    searchInput.addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#patientsTable tbody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

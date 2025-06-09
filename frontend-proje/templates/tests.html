@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Tahlil Sonuçları - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>
+            <i class="fas fa-flask text-primary"></i> 
+            Tahlil Sonuçları
+        </h1>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <input type="text" id="searchInput" class="form-control" placeholder="Hasta ara...">
+    </div>
+    <div class="col-md-6">
+        <select id="filterSelect" class="form-select">
+            <option value="">Tüm Sonuçlar</option>
+            <option value="normal">Normal Sonuçlar</option>
+            <option value="anormal">Anormal Sonuçlar</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list-alt"></i> Tüm Tahlil Sonuçları ({{ tests|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if tests %}
+                <div class="table-responsive">
+                    <table class="table table-hover" id="testsTable">
+                        <thead>
+                            <tr>
+                                <th>Hasta</th>
+                                <th>Test Türü</th>
+                                <th>Sonuç</th>
+                                <th>Normal Aralık</th>
+                                <th>Durum</th>
+                                <th>Tarih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in tests %}
+                            <tr data-status="{{ 'normal' if test.normal else 'anormal' }}">
+                                <td>
+                                    <a href="{{ url_for('patient_detail', tc=test.tc) }}" 
+                                       class="text-decoration-none">
+                                        <i class="fas fa-user text-muted"></i>
+                                        {{ test.hasta_ad }} {{ test.hasta_soyad }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ test.tip }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ test.sonuc if test.sonuc is not none else 'N/A' }}</strong>
+                                </td>
+                                <td>
+                                    {% if test.min is not none and test.max is not none %}
+                                        <small class="text-muted">{{ test.min }} - {{ test.max }}</small>
+                                    {% else %}
+                                        <small class="text-muted">Aralık yok</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if test.normal is not none %}
+                                        {% if test.normal %}
+                                            <span class="badge badge-normal">
+                                                <i class="fas fa-check"></i> Normal
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-abnormal">
+                                                <i class="fas fa-exclamation-triangle"></i> Anormal
+                                            </span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-question"></i> Bilinmiyor
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ test.tarih }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-flask fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">Henüz tahlil sonucu bulunmamaktadır</h4>
+                    <p class="text-muted">Sistem henüz tahlil sonucu içermiyor.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+    const table = document.getElementById('testsTable');
+    
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusFilter = filterSelect.value;
+        const rows = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const text = row.textContent.toLowerCase();
+            const status = row.getAttribute('data-status');
+            
+            const matchesSearch = text.includes(searchTerm);
+            const matchesStatus = !statusFilter || status === statusFilter;
+            
+            row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+        }
+    }
+    
+    searchInput.addEventListener('keyup', filterTable);
+    filterSelect.addEventListener('change', filterTable);
+});
+</script>
+{% endblock %}

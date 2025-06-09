@@ -1,0 +1,399 @@
+{% extends "base.html" %}
+
+{% block title %}Raporlar - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>
+            <i class="fas fa-chart-bar text-primary"></i> 
+            Hastane Raporları
+        </h1>
+        <p class="text-muted">Detaylı istatistikler ve analiz raporları</p>
+    </div>
+</div>
+
+<!-- Kan Grubu Dağılımı -->
+<div class="row mb-4">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tint"></i> Kan Grubu Dağılımı
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if kan_grubu_dagilimi %}
+                <div class="chart-container">
+                    <canvas id="bloodGroupChart"></canvas>
+                </div>
+                <div class="table-responsive mt-3">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Kan Grubu</th>
+                                <th>Hasta Sayısı</th>
+                                <th>Yüzde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set total = kan_grubu_dagilimi | sum(attribute=1) %}
+                            {% for grup in kan_grubu_dagilimi %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-danger">{{ grup[0] }}</span>
+                                </td>
+                                <td>{{ grup[1] }}</td>
+                                <td>
+                                    <div class="progress" style="height: 15px;">
+                                        <div class="progress-bar" style="width: {{ (grup[1] / total * 100) | round(1) }}%">
+                                            {{ (grup[1] / total * 100) | round(1) }}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-tint fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Henüz hasta kaydı bulunmamaktadır.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Aylık Muayene Trendi -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line"></i> Aylık Muayene Trendi
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if aylik_muayeneler %}
+                <div class="chart-container">
+                    <canvas id="monthlyExamsChart"></canvas>
+                </div>
+                <div class="table-responsive mt-3">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Ay</th>
+                                <th>Muayene Sayısı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ay in aylik_muayeneler %}
+                            <tr>
+                                <td>{{ ay[0] }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ ay[1] }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Henüz muayene kaydı bulunmamaktadır.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- En Çok Tahlil Yapılan Hastalar -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-flask"></i> En Çok Tahlil Yapılan Hastalar (Top 10)
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if en_cok_tahlil %}
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Sıra</th>
+                                        <th>Hasta Adı</th>
+                                        <th>Tahlil Sayısı</th>
+                                        <th>Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for hasta in en_cok_tahlil %}
+                                    <tr>
+                                        <td>
+                                            {% if loop.index <= 3 %}
+                                                <span class="badge bg-warning">{{ loop.index }}</span>
+                                            {% else %}
+                                                {{ loop.index }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ hasta[0] }} {{ hasta[1] }}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">{{ hasta[2] }}</span>
+                                        </td>
+                                        <td>
+                                            {% if hasta[2] >= 5 %}
+                                                <span class="badge bg-danger">Yoğun Takip</span>
+                                            {% elif hasta[2] >= 3 %}
+                                                <span class="badge bg-warning">Düzenli Takip</span>
+                                            {% else %}
+                                                <span class="badge bg-info">Normal</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="chart-container">
+                            <canvas id="topPatientsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-flask fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Henüz tahlil kaydı bulunmamaktadır.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- İstatistik Kartları -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h4>{{ kan_grubu_dagilimi | sum(attribute=1) if kan_grubu_dagilimi else 0 }}</h4>
+                <p class="text-muted">Toplam Hasta</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-calendar-alt fa-3x text-success mb-3"></i>
+                <h4>{{ aylik_muayeneler | sum(attribute=1) if aylik_muayeneler else 0 }}</h4>
+                <p class="text-muted">Toplam Muayene</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-flask fa-3x text-warning mb-3"></i>
+                <h4>{{ en_cok_tahlil | sum(attribute=2) if en_cok_tahlil else 0 }}</h4>
+                <p class="text-muted">Toplam Tahlil</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
+                <h4>{{ (aylik_muayeneler | sum(attribute=1) / aylik_muayeneler | length) | round | int if aylik_muayeneler else 0 }}</h4>
+                <p class="text-muted">Aylık Ortalama</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rapor İndirme -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-download"></i> Rapor İndirme
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-primary" onclick="downloadReport('pdf')">
+                                <i class="fas fa-file-pdf"></i> PDF Raporu İndir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-success" onclick="downloadReport('excel')">
+                                <i class="fas fa-file-excel"></i> Excel Raporu İndir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-info" onclick="printReport()">
+                                <i class="fas fa-print"></i> Raporu Yazdır
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Kan grubu dağılımı chart
+{% if kan_grubu_dagilimi %}
+const bloodGroupCtx = document.getElementById('bloodGroupChart').getContext('2d');
+const bloodGroupChart = new Chart(bloodGroupCtx, {
+    type: 'doughnut',
+    data: {
+        labels: [
+            {% for grup in kan_grubu_dagilimi %}
+                '{{ grup[0] }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            data: [
+                {% for grup in kan_grubu_dagilimi %}
+                    {{ grup[1] }},
+                {% endfor %}
+            ],
+            backgroundColor: [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+{% endif %}
+
+// Aylık muayene trendi chart
+{% if aylik_muayeneler %}
+const monthlyCtx = document.getElementById('monthlyExamsChart').getContext('2d');
+const monthlyChart = new Chart(monthlyCtx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for ay in aylik_muayeneler %}
+                '{{ ay[0] }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Muayene Sayısı',
+            data: [
+                {% for ay in aylik_muayeneler %}
+                    {{ ay[1] }},
+                {% endfor %}
+            ],
+            borderColor: '#36A2EB',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+{% endif %}
+
+// En çok tahlil yapılan hastalar chart
+{% if en_cok_tahlil %}
+const topPatientsCtx = document.getElementById('topPatientsChart').getContext('2d');
+const topPatientsChart = new Chart(topPatientsCtx, {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for hasta in en_cok_tahlil[:5] %}
+                '{{ hasta[0][:10] }}...',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Tahlil Sayısı',
+            data: [
+                {% for hasta in en_cok_tahlil[:5] %}
+                    {{ hasta[2] }},
+                {% endfor %}
+            ],
+            backgroundColor: '#4BC0C0'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+{% endif %}
+
+// Rapor indirme fonksiyonları
+function downloadReport(format) {
+    // Bu fonksiyon gerçek bir uygulamada backend'e istek gönderir
+    alert(`${format.toUpperCase()} raporu indirme özelliği henüz aktif değil.`);
+}
+
+function printReport() {
+    window.print();
+}
+
+// Sayfa yüklendiğinde animasyonlar
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

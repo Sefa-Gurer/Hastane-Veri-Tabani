@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Ana Sayfa - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-chart-bar text-primary"></i> 
+            Hastane İstatistikleri
+        </h1>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <div class="stat-number">{{ stats.total_patients or 0 }}</div>
+                <div class="stat-label">
+                    <i class="fas fa-users"></i> Toplam Hasta
+                </div>
+                <i class="fas fa-users stat-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <div class="stat-number">{{ stats.total_staff or 0 }}</div>
+                <div class="stat-label">
+                    <i class="fas fa-user-md"></i> Toplam Personel
+                </div>
+                <i class="fas fa-user-md stat-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <div class="stat-number">{{ stats.monthly_exams or 0 }}</div>
+                <div class="stat-label">
+                    <i class="fas fa-calendar-alt"></i> Bu Ay Muayene
+                </div>
+                <i class="fas fa-calendar-alt stat-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <div class="stat-number">{{ stats.hospitalized_patients or 0 }}</div>
+                <div class="stat-label">
+                    <i class="fas fa-bed"></i> Yatan Hasta
+                </div>
+                <i class="fas fa-bed stat-icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-hospital"></i> Poliklinik Personel Dağılımı
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if clinic_stats %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Poliklinik</th>
+                                <th>Personel Sayısı</th>
+                                <th>Yüzde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for clinic in clinic_stats %}
+                            <tr>
+                                <td>
+                                    <i class="fas fa-clinic-medical text-primary"></i>
+                                    {{ clinic[0] }}
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ clinic[1] }}</span>
+                                </td>
+                                <td>
+                                    {% set clinic_count = clinic[1] if clinic[1] else 0 %}
+                                    {% set total_staff = stats.total_staff if stats.total_staff else 1 %}
+                                    {% set percentage = (clinic_count / total_staff * 100) if total_staff > 0 else 0 %}
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ percentage|round(1) }}%">
+                                            {{ "%.1f"|format(percentage) }}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-hospital fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Henüz poliklinik verisi bulunmamaktadır.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-flask"></i> Son Tahlil Sonuçları
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_tests %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Hasta</th>
+                                <th>Test</th>
+                                <th>Sonuç</th>
+                                <th>Tarih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in recent_tests %}
+                            <tr>
+                                <td>
+                                    <small>{{ test.hasta_ad }} {{ test.hasta_soyad }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ test.sonuc_tipi }}</span>
+                                </td>
+                                <td><strong>{{ test.sonuc }}</strong></td>
+                                <td><small>{{ test.tarih }}</small></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('tests') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye"></i> Tümünü Görüntüle
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center py-3">
+                    <i class="fas fa-flask fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0">Henüz tahlil sonucu bulunmamaktadır.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tachometer-alt"></i> Hızlı Erişim
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a href="{{ url_for('add_patient') }}" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Yeni Hasta Ekle
+                    </a>
+                    <a href="{{ url_for('patients') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i> Hasta Ara
+                    </a>
+                    <a href="{{ url_for('tests') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-flask"></i> Tahlil Sonuçları
+                    </a>
+                    <a href="{{ url_for('staff') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-users-cog"></i> Personel Yönetimi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line"></i> Sistem Özeti
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <div class="mb-2">
+                            <i class="fas fa-database fa-2x text-success"></i>
+                        </div>
+                        <small class="text-muted d-block">Veritabanı</small>
+                        <span class="badge bg-success">Aktif</span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="mb-2">
+                            <i class="fas fa-server fa-2x text-success"></i>
+                        </div>
+                        <small class="text-muted d-block">Sistem</small>
+                        <span class="badge bg-success">Çalışıyor</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <small class="text-muted">Bu Ay Eklenen</small>
+                        <div class="h6 text-primary">{{ stats.monthly_new_patients or 0 }} Hasta</div>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">Toplam Tahlil</small>
+                        <div class="h6 text-info">{{ stats.total_tests or 0 }} Test</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Sayfa yüklendiğinde animasyonları başlat
+document.addEventListener('DOMContentLoaded', function() {
+    // Stat kartları animasyonu
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+    
+    // Diğer kartları animasyon
+    const otherCards = document.querySelectorAll('.card:not(.stat-card)');
+    otherCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('animate-fade-in');
+        }, (statCards.length * 100) + (index * 100));
+    });
+    
+    // Stat numaralarını animasyonlu artırma
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach((element, index) => {
+        const targetValue = parseInt(element.textContent) || 0;
+        let currentValue = 0;
+        const increment = targetValue / 50; // 50 adımda ulaşacak
+        
+        setTimeout(() => {
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= targetValue) {
+                    element.textContent = targetValue;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(currentValue);
+                }
+            }, 20);
+        }, index * 100);
+    });
+});
+
+// Progress bar animasyonu
+window.addEventListener('load', function() {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach((bar, index) => {
+        setTimeout(() => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            bar.style.transition = 'width 1s ease-in-out';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        }, index * 200);
+    });
+});
+</script>
+{% endblock %}

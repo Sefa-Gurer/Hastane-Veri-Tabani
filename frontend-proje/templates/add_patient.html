@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Yeni Hasta Ekle - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>
+                <i class="fas fa-user-plus text-primary"></i> 
+                Yeni Hasta Ekle
+            </h1>
+            <a href="{{ url_for('patients') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Geri Dön
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-form"></i> Hasta Bilgileri
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tc" class="form-label">TC Kimlik Numarası *</label>
+                            <input type="text" class="form-control" id="tc" name="tc" 
+                                   pattern="[0-9]{11}" maxlength="11" required>
+                            <div class="form-text">11 haneli TC kimlik numarası</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="kan_grubu" class="form-label">Kan Grubu *</label>
+                            <select class="form-select" id="kan_grubu" name="kan_grubu" required>
+                                <option value="">Seçin...</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="0+">0+</option>
+                                <option value="0-">0-</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="ad" class="form-label">Ad *</label>
+                            <input type="text" class="form-control" id="ad" name="ad" 
+                                   maxlength="50" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="soyad" class="form-label">Soyad *</label>
+                            <input type="text" class="form-control" id="soyad" name="soyad" 
+                                   maxlength="50" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tel" class="form-label">Telefon *</label>
+                            <input type="tel" class="form-control" id="tel" name="tel" 
+                                   pattern="5[0-9]{9}" maxlength="10" required>
+                            <div class="form-text">5XXXXXXXXX formatında</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dogum_tarihi" class="form-label">Doğum Tarihi</label>
+                            <input type="date" class="form-control" id="dogum_tarihi" name="dogum_tarihi">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-posta</label>
+                        <input type="email" class="form-control" id="email" name="email" 
+                               maxlength="225">
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="reset" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-undo"></i> Temizle
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

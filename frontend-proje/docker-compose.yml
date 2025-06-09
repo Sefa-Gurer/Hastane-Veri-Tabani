@@ -1,0 +1,52 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-xe
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_PASSWORD=oracle123
+      - ORACLE_CHARACTERSET=AL32UTF8
+      - ORACLE_DATABASE=XE
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "sqlplus", "-S", "system/oracle123@localhost:1521/XE", "<<<", "SELECT 1 FROM DUAL;"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  hospital-app:
+    build: .
+    container_name: hospital-web
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - ORACLE_HOST=oracle-db
+      - ORACLE_PORT=1521
+      - ORACLE_SERVICE=XE
+      - ORACLE_USER=hospital
+      - ORACLE_PASSWORD=hospital123
+      - FLASK_ENV=development
+      - FLASK_DEBUG=True
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/hospital_env
+
+volumes:
+  oracle-data:
+
+networks:
+  default:
+    name: hospital-network

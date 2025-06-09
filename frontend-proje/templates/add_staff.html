@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}Yeni Personel Ekle - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>
+                <i class="fas fa-user-plus text-primary"></i> 
+                Yeni Personel Ekle
+            </h1>
+            <a href="{{ url_for('staff') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Personel Listesine Dön
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-id-badge"></i> Personel Bilgileri
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Hata Mesajları Gösterimi -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                                <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }}"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('add_staff') }}" id="staffForm">
+                    <!-- Kişisel Bilgiler Bölümü -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <i class="fas fa-user"></i> Kişisel Bilgiler
+                            </h6>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tc" class="form-label">
+                                <i class="fas fa-id-card text-muted"></i> TC Kimlik Numarası *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="tc" 
+                                   name="tc" 
+                                   maxlength="11" 
+                                   required
+                                   placeholder="11 haneli TC kimlik no">
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> 11 haneli TC kimlik numarası giriniz
+                                <br><small class="text-muted">Test için: 12345678901</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="tel" class="form-label">
+                                <i class="fas fa-phone text-muted"></i> Telefon *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="tel" 
+                                   name="tel" 
+                                   maxlength="10" 
+                                   required
+                                   placeholder="5XXXXXXXXX">
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> 5 ile başlayan 10 haneli numara
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="ad" class="form-label">
+                                <i class="fas fa-user text-muted"></i> Ad *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="ad" 
+                                   name="ad" 
+                                   maxlength="50" 
+                                   required
+                                   placeholder="Personel adı">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="soyad" class="form-label">
+                                <i class="fas fa-user text-muted"></i> Soyad *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="soyad" 
+                                   name="soyad" 
+                                   maxlength="50" 
+                                   required
+                                   placeholder="Personel soyadı">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope text-muted"></i> E-posta *
+                        </label>
+                        <input type="email" 
+                               class="form-control" 
+                               id="email" 
+                               name="email" 
+                               maxlength="225" 
+                               required
+                               placeholder="personel@hospital.com">
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Geçerli e-posta adresi giriniz
+                        </div>
+                    </div>
+                    
+                    <!-- Meslek Bilgileri Bölümü -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <i class="fas fa-briefcase"></i> Meslek Bilgileri
+                            </h6>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="unvan_id" class="form-label">
+                                <i class="fas fa-user-tie text-muted"></i> Unvan *
+                            </label>
+                            <select class="form-select" id="unvan_id" name="unvan_id" required>
+                                <option value="">Unvan seçiniz...</option>
+                                {% if unvanlar %}
+                                    {% for unvan in unvanlar %}
+                                        <option value="{{ unvan[0] }}">{{ unvan[1] }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="" disabled>Unvan bulunamadı</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="poliklinik_id" class="form-label">
+                                <i class="fas fa-hospital text-muted"></i> Poliklinik *
+                            </label>
+                            <select class="form-select" id="poliklinik_id" name="poliklinik_id" required>
+                                <option value="">Poliklinik seçiniz...</option>
+                                {% if poliklinikler %}
+                                    {% for poliklinik in poliklinikler %}
+                                        <option value="{{ poliklinik[0] }}">{{ poliklinik[1] }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="" disabled>Poliklinik bulunamadı</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Butonları -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-outline-secondary me-md-2" onclick="clearForm()">
+                                    <i class="fas fa-undo"></i> Temizle
+                                </button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <i class="fas fa-save"></i> Kaydet
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+console.log('🚀 Add Staff Form yüklendi!');
+
+// Debug mode
+const DEBUG_MODE = true;
+
+function log(...args) {
+    if (DEBUG_MODE) {
+        console.log('[ADD_STAFF]', ...args);
+    }
+}
+
+// Form elements
+const form = document.getElementById('staffForm');
+const submitBtn = document.getElementById('submitBtn');
+
+// Debug panel toggle (Development için)
+if (DEBUG_MODE) {
+    document.getElementById('debugPanel').style.display = 'block';
+    updateDebugPanel();
+}
+
+// TC kimlik numarası sadece rakam girişi
+document.getElementById('tc').addEventListener('input', function() {
+    // Sadece rakamları al
+    let value = this.value.replace(/\D/g, '');
+    this.value = value;
+    
+    log('TC girişi:', value);
+    
+    // 11 haneli kontrol
+    if (value.length === 11) {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+        log('TC 11 hane: OK');
+    } else if (value.length > 0) {
+        this.classList.remove('is-valid');
+        this.classList.add('is-invalid');
+    } else {
+        this.classList.remove('is-valid', 'is-invalid');
+    }
+    
+    updateDebugPanel();
+});
+
+// Telefon numarası sadece rakam girişi
+document.getElementById('tel').addEventListener('input', function() {
+    // Sadece rakamları al
+    let value = this.value.replace(/\D/g, '');
+    this.value = value;
+    
+    log('Telefon girişi:', value);
+    
+    // 10 haneli ve 5 ile başlayan kontrol
+    if (value.length === 10 && value.startsWith('5')) {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+        log('Telefon 10 hane ve 5 ile başlıyor: OK');
+    } else if (value.length > 0) {
+        this.classList.remove('is-valid');
+        this.classList.add('is-invalid');
+    } else {
+        this.classList.remove('is-valid', 'is-invalid');
+    }
+    
+    updateDebugPanel();
+});
+
+// Email validation
+document.getElementById('email').addEventListener('input', function() {
+    const value = this.value.trim();
+    
+    if (value.includes('@') && value.includes('.')) {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+        log('Email geçerli: OK');
+    } else if (value.length > 0) {
+        this.classList.remove('is-valid');
+        this.classList.add('is-invalid');
+    } else {
+        this.classList.remove('is-valid', 'is-invalid');
+    }
+    
+    updateDebugPanel();
+});
+
+// Select değişiklikleri için validation
+document.getElementById('unvan_id').addEventListener('change', function() {
+    if (this.value) {
+        this.classList.add('is-valid');
+        log('Unvan seçildi:', this.value);
+    } else {
+        this.classList.remove('is-valid');
+    }
+    updateDebugPanel();
+});
+
+document.getElementById('poliklinik_id').addEventListener('change', function() {
+    if (this.value) {
+        this.classList.add('is-valid');
+        log('Poliklinik seçildi:', this.value);
+    } else {
+        this.classList.remove('is-valid');
+    }
+    updateDebugPanel();
+});
+
+// Form submit
+form.addEventListener('submit', function(e) {
+    log('Form submit başlıyor...');
+    
+    // Submit butonunu disable et
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
+    
+    // Form verilerini log'la
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    log('Form verileri:', data);
+    
+    // Basit validation
+    let isValid = true;
+    let errors = [];
+    
+    if (!data.tc || data.tc.length !== 11) {
+        isValid = false;
+        errors.push('TC kimlik numarası 11 hane olmalıdır');
+    }
+    
+    if (!data.tel || data.tel.length !== 10 || !data.tel.startsWith('5')) {
+        isValid = false;
+        errors.push('Telefon numarası 5 ile başlayan 10 hane olmalıdır');
+    }
+    
+    if (!data.ad || !data.soyad || !data.email || !data.unvan_id || !data.poliklinik_id) {
+        isValid = false;
+        errors.push('Tüm alanları doldurunuz');
+    }
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Hatalar:\n' + errors.join('\n'));
+        
+        // Submit butonunu tekrar aktif et
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Kaydet';
+        
+        log('Form geçersiz:', errors);
+        return false;
+    }
+    
+    log('Form geçerli, sunucuya gönderiliyor...');
+    return true;
+});
+
+// Form temizleme
+function clearForm() {
+    log('Form temizleniyor...');
+    form.reset();
+    
+    // Tüm validation class'larını temizle
+    form.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+        el.classList.remove('is-valid', 'is-invalid');
+    });
+    
+    updateDebugPanel();
+}
+
+// Debug panel güncelleme
+function updateDebugPanel() {
+    if (!DEBUG_MODE) return;
+    
+    const debugContent = document.getElementById('debugContent');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    debugContent.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Form Verileri:</h6>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            </div>
+            <div class="col-md-6">
+                <h6>Validation Durumu:</h6>
+                <ul>
+                    <li>TC: ${data.tc ? (data.tc.length === 11 ? '✅' : '❌') : '⏳'} (${data.tc ? data.tc.length : 0}/11)</li>
+                    <li>Telefon: ${data.tel ? (data.tel.length === 10 && data.tel.startsWith('5') ? '✅' : '❌') : '⏳'} (${data.tel ? data.tel.length : 0}/10)</li>
+                    <li>Email: ${data.email ? (data.email.includes('@') ? '✅' : '❌') : '⏳'}</li>
+                    <li>Unvan: ${data.unvan_id ? '✅' : '⏳'}</li>
+                    <li>Poliklinik: ${data.poliklinik_id ? '✅' : '⏳'}</li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+log('JavaScript yüklendi ve hazır!');
+</script>
+
+<style>
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.is-valid {
+    border-color: #198754 !important;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.btn {
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.border-bottom {
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
+pre {
+    font-size: 0.8rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}

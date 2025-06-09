@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Personel - Hastane Yönetim Sistemi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>
+            <i class="fas fa-user-md text-primary"></i> 
+            Personel Listesi
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users"></i> Aktif Personel ({{ staff|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="staffTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ad Soyad</th>
+                                <th>Unvan</th>
+                                <th>Poliklinik</th>
+                                <th>Telefon</th>
+                                <th>E-posta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for person in staff %}
+                            <tr>
+                                <td>{{ person.id }}</td>
+                                <td>
+                                    <strong>{{ person.ad }} {{ person.soyad }}</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ person.unvan }}</span>
+                                </td>
+                                <td>{{ person.poliklinik }}</td>
+                                <td>
+                                    <i class="fas fa-phone text-muted"></i>
+                                    {{ person.tel }}
+                                </td>
+                                <td>
+                                    {% if person.email %}
+                                        <i class="fas fa-envelope text-muted"></i>
+                                        {{ person.email }}
+                                    {% else %}
+                                        <span class="text-muted">Belirtilmemiş</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
