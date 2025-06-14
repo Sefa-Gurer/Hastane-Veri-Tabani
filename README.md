@@ -1,3 +1,6 @@
+# Proje Github Bağlantısı
+https://github.com/Sefa-Gurer/Hastane-Veri-Tabani.git
+
 # Hastane Veri Tabanı Yönetim Sistemi
 
 Bu proje, Oracle Database ve Flask kullanılarak geliştirilmiş kapsamlı bir hastane yönetim sistemidir. Hasta kayıtları, personel yönetimi, tahlil sonuçları ve muayene takibi gibi temel hastane işlemlerini kapsar.
