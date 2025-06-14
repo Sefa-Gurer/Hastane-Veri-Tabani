@@ -339,9 +339,6 @@ docker exec oracle-xe sqlplus sys/oracle123@localhost:1521/XE as sysdba
 Docker Compose dosyasında port numaralarını değiştirin.
 
 ## Proje Ekibi
-
-Bu proje, Bursa Uludağ Üniversitesi Bilgisayar Mühendisliği öğrencileri tarafından geliştirilmiştir:
-
 ### Geliştirici Ekibi
 
 **Sefa Gürer** - Okul No: 202013172034
