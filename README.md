@@ -1,8 +1,8 @@
-# 🏥 Hastane Veri Tabanı Yönetim Sistemi
+# Hastane Veri Tabanı Yönetim Sistemi
 
 Bu proje, Oracle Database ve Flask kullanılarak geliştirilmiş kapsamlı bir hastane yönetim sistemidir. Hasta kayıtları, personel yönetimi, tahlil sonuçları ve muayene takibi gibi temel hastane işlemlerini kapsar.
 
-## 📋 İçindekiler
+## İçindekiler
 
 - [Proje Hakkında](#proje-hakkında)
 - [Özellikler](#özellikler)
@@ -12,9 +12,9 @@ Bu proje, Oracle Database ve Flask kullanılarak geliştirilmiş kapsamlı bir h
 - [Veritabanı Şeması](#veritabanı-şeması)
 - [Ekran Görüntüleri](#ekran-görüntüleri)
 - [Proje Yapısı](#proje-yapısı)
-- [Katkıda Bulunma](#katkıda-bulunma)
+- [Proje Ekibi](#proje-ekibi)
 
-## 🎯 Proje Hakkında
+## Proje Hakkında
 
 Hastane Veri Tabanı Yönetim Sistemi, modern web teknolojileri kullanılarak geliştirilmiş bir sağlık bilgi sistemidir. Oracle Database'in güçlü özelliklerini kullanarak karmaşık veri ilişkilerini yönetir ve Flask web framework ile kullanıcı dostu bir arayüz sunar.
 
@@ -25,39 +25,39 @@ Hastane Veri Tabanı Yönetim Sistemi, modern web teknolojileri kullanılarak ge
 - Docker containerization teknolojisi uygulama
 - Hastane iş süreçlerinin dijitalleştirilmesi
 
-## ✨ Özellikler
+## Özellikler
 
-### 👥 Hasta Yönetimi
+### Hasta Yönetimi
 - Hasta kayıt ve bilgi güncelleme sistemi
 - Demografik bilgi ve kan grubu takibi
 - Tahlil geçmişi ve sonuç analizi
 - Muayene kayıtları ve tedavi geçmişi
 
-### 👨‍⚕️ Personel Yönetimi
+### Personel Yönetimi
 - Doktor, hemşire ve teknisyen kayıtları
 - Poliklinik bazında personel organizasyonu
 - Unvan ve yetki yönetimi
 - Sisteme giriş kontrolü
 
-### 🧪 Tahlil ve Laboratuvar
+### Tahlil ve Laboratuvar
 - Laboratuvar sonuçları kayıt sistemi
 - Normal değer aralık kontrolü
 - Anormal sonuç uyarıları
 - Tarihsel tahlil trend analizi
 
-### 📊 Raporlama ve Analiz
+### Raporlama ve Analiz
 - Gerçek zamanlı istatistiksel raporlar
 - Kan grubu dağılım analizleri
 - Aylık muayene trend grafikleri
 - Poliklinik bazında personel dağılımı
 
-### 🏥 Tedavi Takibi
+### Tedavi Takibi
 - Yatan hasta yönetim sistemi
 - Ayakta tedavi kayıtları
 - ICD-10 teşhis kod sistemi
 - Tedavi süresi otomatik hesaplama
 
-## 🛠 Teknoloji Stack
+## Teknoloji Stack
 
 - **Backend**: Python Flask 2.3+
 - **Database**: Oracle Database XE 21c
@@ -67,7 +67,7 @@ Hastane Veri Tabanı Yönetim Sistemi, modern web teknolojileri kullanılarak ge
 - **Template Engine**: Jinja2
 - **Validation**: WTForms, Flask-WTF
 
-## 🚀 Kurulum
+## Kurulum
 
 ### Ön Gereksinimler
 - Docker 20.10+
@@ -111,7 +111,7 @@ make test
 make logs
 ```
 
-## 💻 Kullanım
+## Kullanım
 
 ### Ana Dashboard
 - **URL**: http://localhost:5000
@@ -132,7 +132,7 @@ make logs
 - **Tahlil Sonuçları**: Normal aralık kontrolü ile sonuç görüntüleme
 - **Filtreleme**: Normal/Anormal sonuç filtreleme
 
-## 🗄️ Veritabanı Şeması
+## Veritabanı Şeması
 
 ### Ana Tablolar
 
@@ -182,7 +182,7 @@ SELECT FN_Tahlil_Sayisi(10000000001) FROM DUAL;
 - **vw_Personel_Gorunumu**: Personel JOIN bilgileri
 - **vw_Hasta_Tahlil_Ozeti**: Hasta tahlil özetleri
 
-## 📸 Ekran Görüntüleri
+## Ekran Görüntüleri
 
 ### Database Export Dosyası ve Website Ekran Görüntüleri
 
@@ -244,34 +244,34 @@ SELECT FN_Tahlil_Sayisi(10000000001) FROM DUAL;
   </tr>
 </table>
 
-## 📁 Proje Yapısı
+## Proje Yapısı
 
 ```
 Hastane-Veri-Tabani/
-├── 📁 Adem/                    # Adem'in PL/SQL kodları
+├── Adem/                       # Adem'in PL/SQL kodları
 │   ├── index 1.txt            # Tahlil index
 │   ├── index 2.txt            # Radyoloji index
 │   ├── procedure 1.txt        # Personel ekleme procedure
 │   └── procedure 2.txt        # Hasta ekleme procedure
-├── 📁 Akın/                   # Akın'ın PL/SQL kodları
+├── Akın/                      # Akın'ın PL/SQL kodları
 │   ├── index 3.txt           # Tahlil tarih index
 │   ├── trigger 1.txt         # Giriş log trigger
 │   └── trigger 2.txt         # Email kontrol trigger
-├── 📁 Sefa/                   # Sefa'nın PL/SQL kodları
+├── Sefa/                      # Sefa'nın PL/SQL kodları
 │   ├── fonksiyon 1.txt       # Personel sayısı fonksiyonu
 │   ├── fonksiyon 2.txt       # Tahlil sayısı fonksiyonu
 │   ├── trigger 3.txt         # Tedavi süresi trigger
 │   ├── view 1.txt            # Personel görünümü
 │   └── view 2.txt            # Hasta tahlil özeti
-├── 📁 frontend-proje/         # Flask Web Uygulaması
-│   ├── 📁 templates/         # HTML şablonları
+├── frontend-proje/            # Flask Web Uygulaması
+│   ├── templates/            # HTML şablonları
 │   ├── app.py                # Ana Flask uygulaması
 │   ├── docker-compose.yml    # Docker servisleri
 │   ├── Dockerfile            # Flask container
 │   ├── requirements.txt      # Python bağımlılıkları
 │   ├── Makefile             # Otomatik komutlar
 │   └── README.md            # Detaylı dokümantasyon
-├── 📁 Ekran Görüntüleri/     # Uygulama ekran görüntüleri
+├── Ekran Görüntüleri/        # Uygulama ekran görüntüleri
 │   ├── IMG-20250610-WA0105.jpg
 │   ├── IMG-20250610-WA0106.jpg
 │   ├── IMG-20250610-WA0107.jpg
@@ -281,13 +281,13 @@ Hastane-Veri-Tabani/
 │   ├── IMG-20250610-WA0111.jpg
 │   ├── IMG-20250610-WA0112.jpg
 │   └── IMG-20250610-WA0113.jpg
-├── local_sys_izinler.txt      # Oracle sistem izinleri
-├── sahte_veri.txt            # Test verileri
-├── veritabani_temel.txt      # Temel tablo yapıları
-└── README.md                 # Bu dosya
+├── local_sys_izinler.txt     # Oracle sistem izinleri
+├── sahte_veri.txt           # Test verileri
+├── veritabani_temel.txt     # Temel tablo yapıları
+└── README.md                # Bu dosya
 ```
 
-## 🔧 Kullanışlı Komutlar
+## Kullanışlı Komutlar
 
 ```bash
 # Hızlı başlatma
@@ -311,7 +311,7 @@ make db-shell
 make clean
 ```
 
-## 🧪 Test Verileri
+## Test Verileri
 
 Sistem otomatik olarak test verileri ile gelir:
 - **5 Hasta**: Farklı kan grupları ve demografik bilgiler
@@ -321,7 +321,7 @@ Sistem otomatik olarak test verileri ile gelir:
 - **3 Yatan Hasta**: Tedavi süreleri ile
 - **Multiple Ayakta Tedavi**: Reçete ve teşhis bilgileri
 
-## 🚨 Sorun Giderme
+## Sorun Giderme
 
 ### Oracle Container Başlamıyor
 ```bash
@@ -338,34 +338,16 @@ docker exec oracle-xe sqlplus sys/oracle123@localhost:1521/XE as sysdba
 ### Port Çakışması
 Docker Compose dosyasında port numaralarını değiştirin.
 
-## 👥 Katkıda Bulunma
+## Proje Ekibi
 
-1. **Adem**: Index'ler ve Procedure'lar
-   - Tahlil ve Radyoloji index'leri
-   - Personel ve Hasta ekleme procedure'ları
+Bu proje, Bursa Uludağ Üniversitesi Bilgisayar Mühendisliği öğrencileri tarafından geliştirilmiştir:
 
-2. **Akın**: Trigger'lar ve Index'ler
-   - Sisteme giriş log trigger'ı
-   - Email kontrol trigger'ı
-   - Tahlil tarih index'i
+### Geliştirici Ekibi
 
-3. **Sefa**: Fonksiyonlar, Trigger'lar ve View'lar
-   - Personel sayısı ve tahlil sayısı fonksiyonları
-   - Tedavi süresi trigger'ı
-   - Personel ve tahlil view'ları
+**Sefa Gürer** - Okul No: 202013172034
 
-## 📄 Lisans
+**Adem Han** - Okul No: 202013172021
 
-Bu proje eğitim amaçlı geliştirilmiştir ve MIT lisansı altında paylaşılmaktadır.
+**Akıncan Altıntaş** - Okul No: 202113172058
 
----
-
-**🔗 Faydalı Linkler:**
-- [Oracle Database Documentation](https://docs.oracle.com/en/database/)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [Bootstrap Documentation](https://getbootstrap.com/docs/)
-- [Docker Documentation](https://docs.docker.com/)
-
----
-
-*Bu proje, Oracle Database ve Flask teknolojilerini kullanarak modern bir hastane yönetim sistemi geliştirme sürecini göstermektedir. Eğitim ve öğrenme amaçlı hazırlanmıştır.*
+**Yusuf Can Çakır** - Okul No: 202013172061
