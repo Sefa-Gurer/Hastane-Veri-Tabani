@@ -25,15 +25,6 @@ CREATE TABLE Tahliller (
     CONSTRAINT fk_tc FOREIGN KEY (tc) REFERENCES Hastalar(Hasta_tc),
     CONSTRAINT fk_sonuc_tipi FOREIGN KEY (Sonuc_Tipi) REFERENCES Tahlil_Aralikleri(Sonuc_Tipi)
 );
-CREATE TABLE Tahliller (
-    tc NUMBER(11) NOT NULL,
-    Sonuc_Tipi VARCHAR2(50) NOT NULL,
-    Sonuc NUMBER,
-    Tarih DATE NOT NULL,
-
-    CONSTRAINT fk_tc FOREIGN KEY (tc) REFERENCES Hastalar(Hasta_tc),
-    CONSTRAINT fk_sonuc_tipi FOREIGN KEY (Sonuc_Tipi) REFERENCES Tahlil_Aralikleri(Sonuc_Tipi)
-);
 CREATE TABLE Radyolojik_Goruntuler (
     tc NUMBER(11) NOT NULL,
     Sonuc_Tipi VARCHAR2(50) NOT NULL,
